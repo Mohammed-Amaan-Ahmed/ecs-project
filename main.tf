@@ -246,11 +246,11 @@ resource "aws_ecs_task_definition" "app" {
       image     = var.app_image
       essential = true
 
-      # Fargate requires hostPort == containerPort (or omit hostPort) 
+      # Fargate requires hostPort == containerPort (or omit hostPort)
       portMappings = [
         {
           containerPort = var.container_port
-          hostPort      = var.container_port 
+          hostPort      = var.container_port
           protocol      = "tcp"
         }
       ]
