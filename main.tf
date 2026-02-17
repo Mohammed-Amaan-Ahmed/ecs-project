@@ -246,10 +246,13 @@ resource "aws_ecs_task_definition" "app" {
       image     = var.app_image
       essential = true
 
+      # Fargate requires hostPort == containerPort (or omit hostPort)
       portMappings = [
         {
           containerPort = var.container_port
+          hostPort      = var.container_port
           protocol      = "tcp"
+          
         }
       ]
 
@@ -260,6 +263,14 @@ resource "aws_ecs_task_definition" "app" {
           awslogs-region        = var.region
           awslogs-stream-prefix = "ecs"
         }
+      }
+      # Optional: health check
+      healthCheck = {
+        command     = ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+        interval    = 30
+        timeout     = 5
+        retries     = 3
+        startPeriod = 10
       }
     }
   ])
